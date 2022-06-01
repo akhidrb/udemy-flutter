@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'question.dart';
-import 'answer.dart';
+import 'quiz.dart';
+import 'result.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,7 +13,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var _questIndex = 0;
-  static const questions = [
+  static const _questions = [
     {
       "questionText": "What's your favorite color?",
       "answers": [
@@ -37,10 +37,25 @@ class _MyAppState extends State<MyApp> {
 
   void _answerQuestion() {
     setState(() {
-      if (_questIndex < questions.length - 1) {
+      if (_questIndex < _questions.length) {
         _questIndex += 1;
       }
     });
+  }
+
+  void _goToFirstPage() {
+    setState(() => _questIndex = 0);
+  }
+
+  Widget _getPageType() {
+    if (_questIndex < _questions.length) {
+      return Quiz(
+          questions: _questions,
+          questIndex: _questIndex,
+          answerQuestion: _answerQuestion);
+    } else {
+      return Result(_goToFirstPage);
+    }
   }
 
   @override
@@ -50,13 +65,7 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text("My First App"),
         ),
-        body: Column(
-          children: [
-            Question(questions[_questIndex]['questionText'] as String),
-            Answer(
-                _answerQuestion, questions[_questIndex]['answers'] as List<String>),
-          ],
-        ),
+        body: _getPageType(),
       ),
     );
   }
