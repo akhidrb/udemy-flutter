@@ -13,30 +13,30 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var _questIndex = 0;
+  var _totalScore = 0;
+
   static const _questions = [
     {
       "questionText": "What's your favorite color?",
       "answers": [
-        "Red",
-        "Green",
-        "Blue",
-        "Yellow",
-        "Black",
-        "Grey",
+        {"text": "Green", "score": 1},
+        {"text": "Blue", "score": 5},
+        {"text": "Black", "score": 10},
       ],
     },
     {
       "questionText": "What's your favorite animal?",
       "answers": [
-        "Zebra",
-        "Elephant",
-        "Monkey",
+        {"text": "Dog", "score": 1},
+        {"text": "Horse", "score": 5},
+        {"text": "Monkey", "score": 10},
       ],
     },
   ];
 
-  void _answerQuestion() {
+  void _answerQuestion(int score) {
     setState(() {
+      _totalScore += score;
       if (_questIndex < _questions.length) {
         _questIndex += 1;
       }
@@ -44,7 +44,10 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _goToFirstPage() {
-    setState(() => _questIndex = 0);
+    setState(() {
+      _questIndex = 0;
+      _totalScore = 0;
+    });
   }
 
   Widget _getPageType() {
@@ -54,7 +57,7 @@ class _MyAppState extends State<MyApp> {
           questIndex: _questIndex,
           answerQuestion: _answerQuestion);
     } else {
-      return Result(_goToFirstPage);
+      return Result(_goToFirstPage, _totalScore);
     }
   }
 
